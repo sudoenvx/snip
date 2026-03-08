@@ -2,7 +2,9 @@ package api
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
+	"path/filepath"
 )
 
 type Server struct {
@@ -16,9 +18,39 @@ func NewServer(listenAddr string) *Server {
 func (s *Server) Start() error {
 	server := http.NewServeMux()
 
-	server.Handle("/", http.FileServer(http.Dir(".")))
+	fmt.Println("Listening on " + s.listenAddr)
 
-	fmt.Printf("Listening on %s\n", s.listenAddr)
+	server.HandleFunc("/", handleHomeRender)
+	server.Handle(
+		"/static/",
+		http.StripPrefix(
+			"/static/",
+			http.FileServer(http.Dir(filepath.Join("web", "static"))),
+		),
+	)
 
 	return http.ListenAndServe(s.listenAddr, server)
+}
+
+func handleHomeRender(w http.ResponseWriter, r *http.Request) {
+	data := new(struct {
+		Content string
+	})
+
+	data.Content = "Content from server"
+
+	tplPath := filepath.Join("web", "templates", "index.html")
+	te, err := template.ParseFiles(tplPath)
+	if err != nil {
+		http.Error(w, "failed to load template", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+
+	if err := te.Execute(w, data); err != nil {
+		http.Error(w, "failed to render template", http.StatusInternalServerError)
+		return
+	}
 }
