@@ -20,7 +20,6 @@ func (s *Server) Start() error {
 
 	fmt.Println("Listening on " + s.listenAddr)
 
-	server.HandleFunc("/", handleHomeRender)
 	server.Handle(
 		"/static/",
 		http.StripPrefix(
@@ -28,6 +27,8 @@ func (s *Server) Start() error {
 			http.FileServer(http.Dir(filepath.Join("web", "static"))),
 		),
 	)
+
+	server.HandleFunc("/", handleHomeRender)
 
 	return http.ListenAndServe(s.listenAddr, server)
 }

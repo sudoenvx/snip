@@ -12,6 +12,61 @@
 
     </head>
     <body hx-boost="true">
-        <h1>Snip Url Shortener</h1>
+        <main class="app">
+            <h1 class="title">snip url shortener</h1>
+
+            <form action="" class="shortener card">
+                <div class="input-wrapper">
+                    <label for="url">paste a long url</label>
+                    <input id="url" type="text" name="url" placeholder="https://www.example.com/very/long/url" required>
+                </div>
+
+
+                <button type="submit">Shorten url</button>
+            </form>
+
+
+            <div class="card urls-table">
+                <h2 class="urls-table-title">short urls table</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Original URL</th>
+                            <th>Short URL</th>
+                            <th>Clicks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>https://www.example.com/long/url/1</td>
+                            <td>https://snp.sh/1</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td>https://www.example.com/long/url/2</td>
+                            <td>https://snp.sh/2</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>https://www.example.com/long/url/3</td>
+                            <td>https://snp.sh/3</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>https://www.example.com/long/url/4</td>
+                            <td>https://snp.sh/4</td>
+                            <td>40</td>
+                        </tr>
+                        <tr>
+                            <td>https://www.example.com/long/url/5</td>
+                            <td>https://snp.sh/5</td>
+                            <td>50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </main>
     </body>
 </html>

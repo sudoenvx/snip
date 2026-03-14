@@ -1,3 +1,128 @@
-body {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
+@font-face {
+    font-family: 'sqmarket';
+    src: url('../assets/sqmarket.ttf');
+}
+
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-foreground: #fff;
+}
+
+body {
+    height: 100vh;
+    background-color: #fcfeff;
+    font-family: 'sqmarket', sans-serif;
+}
+
+.title {
+    font-size: 24px;
+    text-align: center;
+    margin: 8px 0;
+}
+
+.app {
+    padding: 12px;
+    max-width: 728px;
+    margin: 48px auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    background-color: #f2f2fd;
+    border-radius: 12px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.shortener {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.shortener input {
+    flex: 1;
+}
+
+input {
+    padding: 8px 12px;
+    border: 2px solid #d0d0d0;
+    border-radius: 4px;
+    outline: none;
+
+    background-color: transparent;
+}
+
+input:focus {
+    border: 2px solid var(--primary-color);
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--primary-foreground);
+    border: none;
+    padding: 8px 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+.urls-table {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.urls-table .urls-table-title {
+    font-size: 16px;
+}
+
+.urls-table table {
+    border: 1px solid #bcbcbc;
+    border-radius: 8px;
+    padding: 8px;
+    width: 100%;
+}
+
+.urls-table table th,
+.urls-table table td {
+    font-size: 12px;
+    text-align: start;
+    padding: 8px;
+
+    border: 1px solid #bcbcbc;
+}
+
+.urls-table table tr:nth-child(even) {
+    background-color: #f2f2fd;
+}
+
+.urls-table table tr {
+    border-bottom: 1px solid #000;
 }
