@@ -54,7 +54,26 @@ func CreateShortenUrlHandler(db *database.DB) http.HandlerFunc {
 	}
 }
 
-func HandleRedirect(w http.ResponseWriter, r *http.Request) {}
+func CreateRedirectHandler(db *database.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		code := r.PathValue("code")
+		var originalUrl string
+
+		query := "select original_url from urls where code = $1"
+		row := db.Pool.QueryRow(r.Context(), query, code)
+		row.Scan(&originalUrl)
+
+		updateClicksQuery := "update urls set clicks = clicks + 1 where code = $1"
+		command, err := db.Pool.Exec(r.Context(), updateClicksQuery, code)
+		if err != nil {
+			fmt.Fprintf(w, "Failed to update clicks")
+		}
+
+		command.Insert()
+
+		http.Redirect(w, r, originalUrl, http.StatusMovedPermanently)
+	}
+}
 
 func CreateGetAllUrlsHandler(db *database.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

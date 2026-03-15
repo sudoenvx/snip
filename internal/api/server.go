@@ -46,8 +46,7 @@ func (s *Server) Start() error {
 
 	server.HandleFunc("/", handlers.HandleHomeRender)
 	server.HandleFunc("POST /shorten", handlers.CreateShortenUrlHandler(s.Db))
-
-	server.HandleFunc("GET /e/{code}", handlers.HandleRedirect)
+	server.HandleFunc("GET /e/{code}", handlers.CreateRedirectHandler(s.Db))
 	server.HandleFunc("GET /shorten-urls", handlers.CreateGetAllUrlsHandler(s.Db))
 
 	return http.ListenAndServe(s.listenAddr, server)
