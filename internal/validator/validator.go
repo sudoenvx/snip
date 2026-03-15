@@ -11,6 +11,8 @@ var validDomains = [...]string{
 	"net",
 	"org",
 	"io",
+	"vercel",
+	"app",
 }
 
 func ValidateURL(url string) bool {

@@ -30,6 +30,7 @@ func(s *Server) SetupDatabase() {
 	}
 
 	s.Db = db
+	println(s.Db.Pool.Config().ConnConfig.Database)
 }
 
 func (s *Server) Start() error {

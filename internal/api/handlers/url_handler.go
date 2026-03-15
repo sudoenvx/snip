@@ -34,7 +34,9 @@ func CreateShortenUrlHandler(db *database.DB) http.HandlerFunc {
 
 		result, err := shortener.ShortenUrl(payload.Url)
 		if err != nil {
-
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Failed to shorten url: %v", err)
+			return
 		}
 
 		query := "insert into urls (original_url, code) values ($1, $2)"
@@ -61,15 +63,18 @@ func CreateRedirectHandler(db *database.DB) http.HandlerFunc {
 
 		query := "select original_url from urls where code = $1"
 		row := db.Pool.QueryRow(r.Context(), query, code)
-		row.Scan(&originalUrl)
-
-		updateClicksQuery := "update urls set clicks = clicks + 1 where code = $1"
-		command, err := db.Pool.Exec(r.Context(), updateClicksQuery, code)
+		err := row.Scan(&originalUrl)
 		if err != nil {
-			fmt.Fprintf(w, "Failed to update clicks")
+			http.Error(w, "URL not found", http.StatusNotFound)
+			return
 		}
 
-		command.Insert()
+		updateClicksQuery := "update urls set clicks = clicks + 1 where code = $1"
+		_, err = db.Pool.Exec(r.Context(), updateClicksQuery, code)
+		if err != nil {
+			fmt.Fprintf(w, "Failed to update clicks")
+			return
+		}
 
 		http.Redirect(w, r, originalUrl, http.StatusMovedPermanently)
 	}
