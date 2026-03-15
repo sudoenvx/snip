@@ -7,6 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Snip</title>
         <script src="https://unpkg.com/htmx.org@2.0.8"></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
         <link rel="stylesheet" href="../static/index.css">
 
 
@@ -15,7 +16,7 @@
         <main class="app">
             <h1 class="title">snip url shortener</h1>
 
-            <form action="" class="shortener card">
+            <form class="shortener card" method="POST" hx-post="/shorten" hx-target="#urls-table" hx-swap="beforeend" hx-ext="json-enc">
                 <div class="input-wrapper">
                     <label for="url">paste a long url</label>
                     <input id="url" type="text" name="url" placeholder="https://www.example.com/very/long/url" required>
@@ -27,7 +28,10 @@
 
 
             <div class="card urls-table">
-                <h2 class="urls-table-title">short urls table</h2>
+                <div class="urls-table-header">
+                    <h2 class="urls-table-title">short urls table</h2>
+                    <button hx-get="http://localhost:3000/shorten-urls" hx-trigger="load" hx-target="#urls-table">load urls</button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -36,32 +40,8 @@
                             <th>Clicks</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>https://www.example.com/long/url/1</td>
-                            <td>https://snp.sh/1</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>https://www.example.com/long/url/2</td>
-                            <td>https://snp.sh/2</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>https://www.example.com/long/url/3</td>
-                            <td>https://snp.sh/3</td>
-                            <td>30</td>
-                        </tr>
-                        <tr>
-                            <td>https://www.example.com/long/url/4</td>
-                            <td>https://snp.sh/4</td>
-                            <td>40</td>
-                        </tr>
-                        <tr>
-                            <td>https://www.example.com/long/url/5</td>
-                            <td>https://snp.sh/5</td>
-                            <td>50</td>
-                        </tr>
+                    <tbody id="urls-table">
+                        
                     </tbody>
                 </table>
             </div>
@@ -69,4 +49,6 @@
 
         </main>
     </body>
+
+    
 </html>

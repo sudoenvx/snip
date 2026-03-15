@@ -1,23 +1,39 @@
 package api
 
 import (
+	"context"
 	"fmt"
-	"html/template"
+	"log"
 	"net/http"
+	"os"
 	"path/filepath"
+
+	"github.com/sudoenvx/snip/internal/api/handlers"
+	"github.com/sudoenvx/snip/internal/database"
 )
 
 type Server struct {
 	listenAddr string
+	Db *database.DB
 }
 
 func NewServer(listenAddr string) *Server {
 	return &Server{listenAddr: listenAddr}
 }
 
+func(s *Server) SetupDatabase() {
+	connection := os.Getenv("DATABASE_URL")
+	db, err := database.NewDB(context.Background(), connection)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s.Db = db
+}
+
 func (s *Server) Start() error {
 	server := http.NewServeMux()
-
 	fmt.Println("Listening on " + s.listenAddr)
 
 	server.Handle(
@@ -28,30 +44,11 @@ func (s *Server) Start() error {
 		),
 	)
 
-	server.HandleFunc("/", handleHomeRender)
+	server.HandleFunc("/", handlers.HandleHomeRender)
+	server.HandleFunc("POST /shorten", handlers.CreateShortenUrlHandler(s.Db))
+
+	server.HandleFunc("GET /e/{code}", handlers.HandleRedirect)
+	server.HandleFunc("GET /shorten-urls", handlers.CreateGetAllUrlsHandler(s.Db))
 
 	return http.ListenAndServe(s.listenAddr, server)
-}
-
-func handleHomeRender(w http.ResponseWriter, r *http.Request) {
-	data := new(struct {
-		Content string
-	})
-
-	data.Content = "Content from server"
-
-	tplPath := filepath.Join("web", "templates", "index.html")
-	te, err := template.ParseFiles(tplPath)
-	if err != nil {
-		http.Error(w, "failed to load template", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-
-	if err := te.Execute(w, data); err != nil {
-		http.Error(w, "failed to render template", http.StatusInternalServerError)
-		return
-	}
 }

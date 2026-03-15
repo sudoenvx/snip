@@ -19,9 +19,9 @@ func main() {
 		log.Printf("warning: failed to load .env file: %v", err)
 	}
 
-	databaseURL := os.Getenv("DATABASE_URL")
+	databaseURL := os.Getenv("DATABASE_MIGRATION_URL")
 	if databaseURL == "" {
-		log.Fatal("DATABASE_URL is required")
+		log.Fatal("DATABASE_MIGRATION_URL is required")
 	}
 
 	migrationsPath, err := filepath.Abs("migrations")
