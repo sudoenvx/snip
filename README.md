@@ -2,6 +2,9 @@
 
 Snip is a minimal URL shortener built with Go, PostgreSQL, and HTMX. It provides a simple web UI and fast redirects backed by a relational database.
 
+![snip -v1.0](./docs/screenshots/snip-v1.0.png)
+<p align="center">Snip version 1.0 - a minimal URL shortener</p>
+
 ## Features
 
 - Create short URLs from long URLs
